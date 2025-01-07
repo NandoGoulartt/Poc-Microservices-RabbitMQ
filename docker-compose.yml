@@ -1,0 +1,27 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: poc-rabbitmq
+    hostname: poc-rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      - ./.docker/rabbitmq/.rabbitmq_data:/var/lib/rabbitmq/mnesia
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+  microservice-queue:
+    container_name: microservice-queue
+    build:
+      context: "./queue"
+      dockerfile: Dockerfile
+    command: npm run start:dev
+    depends_on:
+      - rabbitmq
+    ports:
+      - 3000:3000
+    volumes:
+      - ./queue:/usr/src/app
+      - /usr/src/app/node_modules
