@@ -1,6 +1,8 @@
+version: "3"
+
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.10-management
     container_name: poc-rabbitmq
     hostname: poc-rabbitmq
     ports:
