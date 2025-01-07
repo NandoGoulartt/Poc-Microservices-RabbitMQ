@@ -1,23 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { AppDto } from './app.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Post()
-  async publishMessage(
-    @Body('routingKey') routingKey: string,
-    @Body('payload') payload: any,
-  ) {
-    console.log('publicando');
+  async publishMessage(@Body() appDto: AppDto) {
+    const { routingKey, payload } = appDto;
 
-    await this.appService.publishMessage(routingKey, payload);
-    return { message: 'Mensagem publicada com sucesso!' };
+    return await this.appService.publishMessage(routingKey, payload);
   }
 }
